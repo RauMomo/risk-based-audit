@@ -1,0 +1,59 @@
+{
+  "auth": {
+    "login": {
+      "title": "Masuk ke akun Anda",
+      "subtitle": "Sistem Audit Internal Berbasis Risiko",
+      "button": "Masuk",
+      "link": "Masuk",
+      "error": "Email atau password salah"
+    },
+    "register": {
+      "title": "Buat akun Anda",
+      "subtitle": "Mulai dengan Audit Internal Berbasis Risiko",
+      "button": "Buat akun",
+      "link": "Buat akun",
+      "error": "Registrasi gagal"
+    },
+    "email": "Alamat email",
+    "password": "Password",
+    "newPassword": "Password baru",
+    "confirmPassword": "Konfirmasi password",
+    "fullName": "Nama lengkap",
+    "rememberMe": "Ingat saya",
+    "forgotPassword": "Lupa password?",
+    "forgotPasswordSubtitle": "Masukkan email Anda untuk menerima link reset password",
+    "resetPassword": "Reset password",
+    "resetPasswordSubtitle": "Masukkan password baru Anda",
+    "resetPasswordButton": "Reset password",
+    "sendResetLink": "Kirim link reset",
+    "backToLogin": "Kembali ke login",
+    "noAccount": "Belum punya akun?",
+    "hasAccount": "Sudah punya akun?",
+    "loggingIn": "Masuk...",
+    "registering": "Membuat akun...",
+    "sending": "Mengirim...",
+    "resetting": "Mereset...",
+    "resetEmailSent": "Email reset password berhasil dikirim",
+    "resetError": "Gagal mereset password",
+    "passwordMismatch": "Password tidak cocok",
+    "invalidResetToken": "Token reset tidak valid"
+  },
+  "common": {
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "view": "Lihat",
+    "close": "Tutup",
+    "submit": "Kirim",
+    "search": "Cari",
+    "loading": "Memuat...",
+    "error": "Error",
+    "success": "Berhasil",
+    "warning": "Peringatan",
+    "info": "Informasi",
+    "confirm": "Konfirmasi",
+    "yes": "Ya",
+    "no": "Tidak"
+  }
+}

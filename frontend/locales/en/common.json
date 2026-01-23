@@ -1,0 +1,59 @@
+{
+  "auth": {
+    "login": {
+      "title": "Sign in to your account",
+      "subtitle": "Risk-Based Internal Audit System",
+      "button": "Sign in",
+      "link": "Sign in",
+      "error": "Invalid email or password"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Get started with Risk-Based Internal Audit",
+      "button": "Create account",
+      "link": "Create account",
+      "error": "Registration failed"
+    },
+    "email": "Email address",
+    "password": "Password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "fullName": "Full name",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordSubtitle": "Enter your email to receive a password reset link",
+    "resetPassword": "Reset password",
+    "resetPasswordSubtitle": "Enter your new password",
+    "resetPasswordButton": "Reset password",
+    "sendResetLink": "Send reset link",
+    "backToLogin": "Back to login",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loggingIn": "Signing in...",
+    "registering": "Creating account...",
+    "sending": "Sending...",
+    "resetting": "Resetting...",
+    "resetEmailSent": "Password reset email sent successfully",
+    "resetError": "Failed to reset password",
+    "passwordMismatch": "Passwords do not match",
+    "invalidResetToken": "Invalid reset token"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "close": "Close",
+    "submit": "Submit",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
