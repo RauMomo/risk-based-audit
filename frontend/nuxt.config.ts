@@ -1,18 +1,38 @@
 import yaml from "@rollup/plugin-yaml";
+import { fileURLToPath } from "node:url";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-
-  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxt/ui"],
-
+  modules: [
+    "@pinia/nuxt",
+    "@nuxt/ui",
+    "@nuxt/eslint",
+    "@vueuse/nuxt",
+    "@nuxt/image",
+  ],
+  routeRules: {
+    "/dashboard": {
+      ssr: false,
+      prerender: true,
+    },
+  },
+  alias: {
+    "@": fileURLToPath(new URL("./", import.meta.url)),
+    "@components": fileURLToPath(new URL("./components", import.meta.url)),
+    "@composables": fileURLToPath(new URL("./composables", import.meta.url)),
+    "@layouts": fileURLToPath(new URL("./layouts", import.meta.url)),
+    "@pages": fileURLToPath(new URL("./pages", import.meta.url)),
+    "@stores": fileURLToPath(new URL("./stores", import.meta.url)),
+    "@utils": fileURLToPath(new URL("./utils", import.meta.url)),
+    "@types": fileURLToPath(new URL("./types", import.meta.url)),
+    "@assets": fileURLToPath(new URL("./assets", import.meta.url)),
+  },
   typescript: {
     strict: true,
     typeCheck: false, // Disable during dev for better performance, use 'npm run type-check' instead
   },
-
   css: ["~/assets/css/main.css"],
-
   app: {
     head: {
       title: "Risk-Based Internal Audit System",
@@ -27,7 +47,14 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
-
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: "never",
+        braceStyle: "1tbs",
+      },
+    },
+  },
   runtimeConfig: {
     // Private keys (only available server-side)
     apiSecret: "",
@@ -39,11 +66,6 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: "2026-01-23",
-
-  vite: {
-    plugins: [yaml()],
-  },
-
   future: {
     compatibilityVersion: 4,
   },

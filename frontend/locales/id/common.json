@@ -36,7 +36,8 @@
     "resetEmailSent": "Email reset password berhasil dikirim",
     "resetError": "Gagal mereset password",
     "passwordMismatch": "Password tidak cocok",
-    "invalidResetToken": "Token reset tidak valid"
+    "invalidResetToken": "Token reset tidak valid",
+    "contactAdmin": "Hubungi admin untuk bantuan login"
   },
   "common": {
     "save": "Simpan",

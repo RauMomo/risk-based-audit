@@ -1,125 +1,138 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
+  <div
+    class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-black"
+  >
+    <div
+      class="absolute bg-[url('../../../assets/images/audits/bg-login.jpg')] bg-cover bg-center bg-transparent w-full h-full block opacity-10 z-20"
+    />
+    <div class="absolute w-full h-full bg-opacity-30 z-10" />
+    <UContainer
+      class="max-w-md w-full space-y-8 bg-neutral-400 px-8 py-4 rounded-xl z-40 block relative shadow-2xl"
+    >
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          {{ t('auth.login.title') }}
+          {{ t("auth.login.title") }}
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          {{ t('auth.login.subtitle') }}
+          {{ t("auth.login.subtitle") }}
         </p>
       </div>
-      <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-        <div class="rounded-md shadow-sm -space-y-px">
-          <div>
-            <label for="email-address" class="sr-only">{{ t('auth.email') }}</label>
-            <input
-              id="email-address"
-              v-model="form.email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              :placeholder="t('auth.email')"
-            >
-          </div>
-          <div>
-            <label for="password" class="sr-only">{{ t('auth.password') }}</label>
-            <input
-              id="password"
-              v-model="form.password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              :placeholder="t('auth.password')"
-            >
-          </div>
-        </div>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input
-              id="remember-me"
-              v-model="form.rememberMe"
-              name="remember-me"
-              type="checkbox"
-              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            >
-            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-              {{ t('auth.rememberMe') }}
-            </label>
-          </div>
-
-          <div class="text-sm">
-            <NuxtLink to="/auth/forgot-password" class="font-medium text-indigo-600 hover:text-indigo-500">
-              {{ t('auth.forgotPassword') }}
-            </NuxtLink>
-          </div>
-        </div>
+      <UForm
+        ref="form"
+        :schema="schema"
+        :state="state"
+        class="mt-8 space-y-6"
+        @submit="handleLogin"
+      >
+        <UFormField :label="t('auth.email')" name="email">
+          <UInput
+            id="email-address"
+            class="w-full border-black"
+            name="email"
+            type="email"
+            v-model="state.email"
+            autocomplete="email"
+            color="neutral"
+            highlight
+            variant="ghost"
+            :placeholder="t('auth.email')"
+          >
+          </UInput>
+        </UFormField>
+        <UFormField :label="t('auth.password')" name="password">
+          <UInput
+            id="password"
+            name="password"
+            type="password"
+            v-model="state.password"
+            color="neutral"
+            highlight
+            class="w-full"
+            variant="ghost"
+            :placeholder="t('auth.password')"
+          >
+          </UInput>
+        </UFormField>
 
         <div v-if="error" class="rounded-md bg-red-50 p-4">
           <p class="text-sm text-red-800">{{ error }}</p>
         </div>
 
         <div>
-          <button
+          <UButton
+            :label="loading ? t('auth.loggingIn') : t('auth.login.button')"
             type="submit"
-            :disabled="loading"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            :block="true"
+            color="secondary"
+            :loading="loading"
           >
-            {{ loading ? t('auth.loggingIn') : t('auth.login.button') }}
-          </button>
+          </UButton>
         </div>
 
         <div class="text-center">
           <p class="text-sm text-gray-600">
-            {{ t('auth.noAccount') }}
-            <NuxtLink to="/auth/register" class="font-medium text-indigo-600 hover:text-indigo-500">
-              {{ t('auth.register.link') }}
-            </NuxtLink>
+            {{ t("auth.noAccount") }} {{ t("auth.contactAdmin") }}
           </p>
         </div>
-      </form>
-    </div>
+      </UForm>
+    </UContainer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/stores/auth'
-import { useI18n } from '~/composables/useI18n'
+import { useAuthStore } from "~/stores/auth";
+import { useI18n } from "~/composables/useI18n";
+import * as z from "zod";
+import type { FormSubmitEvent } from "@nuxt/ui";
 
 definePageMeta({
-  layout: 'auth',
-  middleware: 'guest'
-})
+  layout: "auth",
+  pageTransition: {
+    name: "fade",
+    mode: "in-out",
+    type: "animation",
+    duration: 500,
+    appear: true,
+  },
+  viewTransition: true,
+  scrollToTop: true,
+  middleware: "guest",
+});
 
-const { t } = useI18n()
-const authStore = useAuthStore()
-const router = useRouter()
+const { t } = useI18n();
+const authStore = useAuthStore();
+const router = useRouter();
 
-const form = ref({
-  email: '',
-  password: '',
-  rememberMe: false
-})
+type Schema = z.output<typeof schema>;
 
-const loading = ref(false)
-const error = ref('')
+const schema = z.object({
+  email: z
+    .string()
+    .min(1, "Please enter your email")
+    .email("Please enter a valid email"),
+  password: z.string().min(1, "Please enter your password"),
+});
 
-const handleLogin = async () => {
-  loading.value = true
-  error.value = ''
+const state = reactive<Partial<Schema>>({
+  email: "",
+  password: "",
+});
+
+const loading = ref(false);
+const error = ref("");
+
+const handleLogin = async (event: FormSubmitEvent<Schema>) => {
+  loading.value = true;
+  error.value = "";
 
   try {
-    await authStore.login(form.value)
-    router.push('/')
+    await authStore.loginDummy(event.data);
+    router.push("/dashboard");
   } catch (err: any) {
-    error.value = err.message || t('auth.login.error')
+    error.value = err.message || t("auth.login.error");
   } finally {
-    loading.value = false
+    loading.value = false;
+    console.log(event.data);
   }
-}
+};
 </script>

@@ -1,5 +1,145 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+@import "@nuxt/ui";
 
-@tailwind base;
-@tailwind components;
 @tailwind utilities;
+
+@theme static {
+  --font-sans: "Space-Grotesk", sans-serif;
+  --font-serif: "Instrument Serif", serif;
+
+  /* Primary Colors */
+  --color-primary-50: #fff5e6;
+  --color-primary-100: #ffebcc;
+  --color-primary-200: #ffd099;
+  --color-primary-300: #ffb067;
+  --color-primary-400: #ff9041;
+  --color-primary-500: #ff5c02;
+  --color-primary-600: #db4101;
+  --color-primary-700: #b72b01;
+  --color-primary-800: #931900;
+  --color-primary-900: #7a0d00;
+  --color-primary-950: #5c0800;
+
+  /* Secondary Colors */
+  --color-secondary-50: #f0e6ff;
+  --color-secondary-100: #e1ccff;
+  --color-secondary-200: #c199ff;
+  --color-secondary-300: #9d66ff;
+  --color-secondary-400: #7f3fff;
+  --color-secondary-500: #4d00ff;
+  --color-secondary-600: #3b00db;
+  --color-secondary-700: #2c00b7;
+  --color-secondary-800: #1e0093;
+  --color-secondary-900: #15007a;
+  --color-secondary-950: #0d0052;
+
+  /* Success Colors */
+  --color-success-50: #fafee6;
+  --color-success-100: #f4fdcd;
+  --color-success-200: #e6fb9c;
+  --color-success-300: #d1f46a;
+  --color-success-400: #bbea45;
+  --color-success-500: #9bdd0d;
+  --color-success-600: #7ebe09;
+  --color-success-700: #649f06;
+  --color-success-800: #4c8004;
+  --color-success-900: #3b6a02;
+  --color-success-950: #2a4d01;
+
+  /* Info Colors */
+  --color-info-50: #e5fffb;
+  --color-info-100: #cbfef6;
+  --color-info-200: #98fef5;
+  --color-info-300: #65fdfc;
+  --color-info-400: #3eeefb;
+  --color-info-500: #00d4f9;
+  --color-info-600: #00a5d6;
+  --color-info-700: #007cb3;
+  --color-info-800: #005990;
+  --color-info-900: #004077;
+  --color-info-950: #002952;
+
+  /* Warning Colors */
+  --color-warning-50: #fffbe6;
+  --color-warning-100: #fef7cc;
+  --color-warning-200: #feee99;
+  --color-warning-300: #fde166;
+  --color-warning-400: #fbd440;
+  --color-warning-500: #f9c002;
+  --color-warning-600: #d69f01;
+  --color-warning-700: #b38101;
+  --color-warning-800: #906400;
+  --color-warning-900: #775000;
+  --color-warning-950: #523700;
+
+  /* Error Colors */
+  --color-error-50: #fff3ec;
+  --color-error-100: #fee6d8;
+  --color-error-200: #fec7b2;
+  --color-error-300: #fea18b;
+  --color-error-400: #fd7d6e;
+  --color-error-500: #fc423f;
+  --color-error-600: #d82e39;
+  --color-error-700: #b51f37;
+  --color-error-800: #921432;
+  --color-error-900: #780c2f;
+  --color-error-950: #52061f;
+
+  /* Neutral Colors */
+  --color-neutral-50: #ffffff;
+  --color-neutral-100: #fafafa;
+  --color-neutral-200: #e8e8e8;
+  --color-neutral-300: #d2d2d2;
+  --color-neutral-400: #bbbbbb;
+  --color-neutral-500: #a4a4a4;
+  --color-neutral-600: #777777;
+  --color-neutral-700: #606060;
+  --color-neutral-800: #4a4a4a;
+  --color-neutral-900: #333333;
+  --color-neutral-950: #1a1a1a;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Background Images */
+  --image-audit-bg: url("/assets/images/audits/bg-login.jpg");
+}
+
+:root {
+  --ui-primary: var(--ui-color-primary-500);
+  --ui-secondary: var(--ui-color-secondary-500);
+  --ui-success: var(--ui-color-success-500);
+  --ui-info: var(--ui-color-info-500);
+  --ui-warning: var(--ui-color-warning-500);
+  --ui-error: var(--ui-color-error-500);
+  --ui-container: var(--breakpoint-lg);
+}
+
+h1 {
+  @apply text-xl font-bold text-gray-900 tracking-wide;
+}
+
+.card-title {
+  @apply text-lg font-semibold text-neutral-700 tracking-wide truncate;
+}
+.card-description {
+  @apply mt-1 text-sm text-neutral-700;
+}
+
+.dark {
+  --ui-primary: var(--ui-color-primary-400);
+  --ui-secondary: var(--ui-color-secondary-400);
+  --ui-success: var(--ui-color-success-400);
+  --ui-info: var(--ui-color-info-400);
+  --ui-warning: var(--ui-color-warning-400);
+  --ui-error: var(--ui-color-error-400);
+}
+
+@layer utilities {
+  .bg-audit-bg {
+    background-image: var(--image-audit-bg);
+  }
+}

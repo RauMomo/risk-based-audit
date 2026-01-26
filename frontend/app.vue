@@ -7,13 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { useAuthStore } from "./stores/auth";
-
-const authStore = useAuthStore();
-
-// Fetch user on app mount if token exists
-onMounted(() => {
-  authStore.fetchUser();
-});
+// Auth is initialized via plugins and middleware
+// No need for manual initialization here
 </script>

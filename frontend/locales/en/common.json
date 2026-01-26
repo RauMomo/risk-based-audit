@@ -36,7 +36,8 @@
     "resetEmailSent": "Password reset email sent successfully",
     "resetError": "Failed to reset password",
     "passwordMismatch": "Passwords do not match",
-    "invalidResetToken": "Invalid reset token"
+    "invalidResetToken": "Invalid reset token",
+    "contactAdmin": "Contact your administrator for Login Credentials"
   },
   "common": {
     "save": "Save",
@@ -55,5 +56,8 @@
     "confirm": "Confirm",
     "yes": "Yes",
     "no": "No"
+  },
+  "dashboard": {
+    "title": "Home"
   }
 }
