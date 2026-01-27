@@ -44,7 +44,18 @@ export default defineNuxtConfig({
           content: "Enterprise Risk Management and Internal Audit System",
         },
       ],
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+        // Google Fonts
+        { 
+          rel: 'stylesheet', 
+          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap' 
+        }
+      ],
+      script: [
+        // Phosphor Icons
+        { src: 'https://unpkg.com/@phosphor-icons/web', defer: true }
+        // CATATAN: Tailwind & Vue 3 CDN TIDAK boleh dimasukkan di sini
+      ]
     },
   },
   eslint: {

@@ -87,3 +87,26 @@ export enum FindingStatus {
   RESOLVED = 'resolved',
   CLOSED = 'closed'
 }
+
+export interface AuditCharter {
+  id: string;
+  title: string;
+  version: string;
+  date: string; // ISO Date string (YYYY-MM-DD)
+  uploadedBy: string;
+  approvedBy: string;
+  isActive: boolean;
+  fileName?: string;
+  fileUrl?: string; // Simulasi URL file
+  fileSize?: string;
+}
+
+export interface CharterFormState {
+  title: string;
+  version: string;
+  date: string;
+  uploadedBy: string;
+  approvedBy: string;
+  isActive: boolean;
+  file: File | null;
+}

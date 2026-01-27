@@ -1,7 +1,13 @@
 export const MenuList = [
   {
-    name: "Audit Charter",
+    name: "Dashboard",
     href: "/dashboard",
+    icon: "charter",
+    description: "RBIA Dashboard",
+  },
+  {
+    name: "Audit Charter",
+    href: "/audit-charter",
     icon: "charter",
     description: "Manage audit mandate and charter",
   },

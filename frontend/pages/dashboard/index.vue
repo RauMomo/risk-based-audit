@@ -27,7 +27,7 @@
                     <div></div>
                   </template>
                   <div class="flex items-center">
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                       <UIcon
                         :name="item.icon"
                         class="text-primary-500 size-8"
