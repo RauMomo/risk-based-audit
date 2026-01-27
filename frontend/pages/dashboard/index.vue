@@ -11,7 +11,7 @@
       <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
           <div class="text-center">
-            <h2 class="text-2xl font-semibold text-neutral-700 mb-4">
+            <h2 class="text-2xl font-semibold text-neutral-700 mb-4 bg-">
               Welcome to Risk-Based Internal Audit System
             </h2>
             <p class="text-neutral-700 mb-8">
