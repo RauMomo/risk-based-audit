@@ -22,7 +22,7 @@
                 @click="toggleLocale"
                 class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
               >
-                {{ locale === 'en' ? 'EN' : 'ID' }}
+                {{ locale === "en" ? "EN" : "ID" }}
               </button>
               <span class="text-gray-700">{{ authStore.user?.fullName }}</span>
               <button
@@ -36,24 +36,24 @@
         </div>
       </div>
     </nav>
-    <main>
+    <UMain class="bg">
       <slot />
-    </main>
+    </UMain>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/stores/auth'
-import { useI18n } from '~/composables/useI18n'
+import { useAuthStore } from "~/stores/auth";
+import { useI18n } from "~/composables/useI18n";
 
-const authStore = useAuthStore()
-const { locale, setLocale } = useI18n()
+const authStore = useAuthStore();
+const { locale, setLocale } = useI18n();
 
 const toggleLocale = () => {
-  setLocale(locale.value === 'en' ? 'id' : 'en')
-}
+  setLocale(locale.value === "en" ? "id" : "en");
+};
 
 const handleLogout = async () => {
-  await authStore.logout()
-}
+  await authStore.logout();
+};
 </script>
