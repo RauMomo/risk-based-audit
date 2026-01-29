@@ -3,8 +3,19 @@ import { defineStore } from 'pinia'
 import type { AuditCharter, CharterFormState } from '~/types/audit'
 
 export const useCharterStore = defineStore('charter', () => {
-  // Mock Data Awal (Supaya tampilan tidak kosong saat dijalankan)
+  // Mock Data
   const charters = ref<AuditCharter[]>([
+    {
+      id: '2',
+      title: 'Internal Audit Charter 2026',
+      version: '1.1', // Anggap ini yang terbaru
+      date: '2026-01-15',
+      uploadedBy: 'Dimas (HIA)',
+      approvedBy: 'Audit Committee',
+      isActive: true,
+      fileName: 'audit-charter-v1.1_2026.pdf',
+      fileSize: '3.1 MB'
+    },
     {
       id: '1',
       title: 'Internal Audit Charter 2025',
@@ -15,72 +26,57 @@ export const useCharterStore = defineStore('charter', () => {
       isActive: false,
       fileName: 'audit-charter-v1.0_2025.pdf',
       fileSize: '2.5 MB'
-    },
-    {
-      id: '2',
-      title: 'Financial Audit Charter 2025 ',
-      version: '1.1',
-      date: '2025-02-15',
-      uploadedBy: 'Dimas (HIA)',
-      approvedBy: 'Audit Committee',
-      isActive: false, // Ini yang akan tampil besar
-      fileName: 'audit-charter-v1.1_2025.pdf',
-      fileSize: '3.1 MB'
-    },
-    {
-      id: '3',
-      title: 'Operasional Audit Charter 2025',
-      version: '1.2',
-      date: '2025-03-11',
-      uploadedBy: 'Dimas (HIA)',
-      approvedBy: 'Audit Committee',
-      isActive: false, // Ini yang akan tampil besar
-      fileName: 'audit-charter-v1.2_2025.pdf',
-      fileSize: '3.1 MB'
-    },
-    {
-      id: '4',
-      title: 'RBIA Audit Charter 2025',
-      version: '1.3',
-      date: '2025-05-21',
-      uploadedBy: 'Dimas (HIA)',
-      approvedBy: 'Audit Committee',
-      isActive: true, // Ini yang akan tampil besar
-      fileName: 'audit-charter-v1.3_2025.pdf',
-      fileSize: '3.1 MB'
     }
   ])
 
-  // Getters
+  // --- LOGIC BARU: GETTER OTOMATISASI VERSI ---
+  const nextVersion = computed(() => {
+    // Skenario 1: Jika belum ada data sama sekali, mulai dari 1.0
+    if (charters.value.length === 0) return '1.0'
+
+    // Skenario 2: Ambil versi dari data paling atas (index 0 / terbaru)
+    // Kita asumsikan data selalu di-unshift (terbaru di atas)
+    const latestVerStr = charters.value[0]?.version
+    const latestVerNum = parseFloat(latestVerStr!)
+
+    // Tambah 0.1 lalu jadikan string dengan 1 angka di belakang koma (fixed)
+    // Contoh: 1.1 + 0.1 = 1.2
+    return (latestVerNum + 0.1).toFixed(1)
+  })
+
+  // Getters Lainnya
   const activeCharter = computed(() => charters.value.find(c => c.isActive))
-  const historyCharters = computed(() => charters.value.filter(c => !c.isActive).sort((a, b) => b.version.localeCompare(a.version)))
+  const historyCharters = computed(() => charters.value.filter(c => !c.isActive))
 
   // Actions
   const addCharter = (form: CharterFormState) => {
-    // Logic: Jika upload baru aktif, non-aktifkan charter yang lama
+    // Non-aktifkan yang lama jika yang baru Active
     if (form.isActive) {
       charters.value.forEach(c => c.isActive = false)
     }
 
-    // Logic: Naming Convention -> audit-charter-v{version}_{year}.{ext}
+    // Gunakan nextVersion.value untuk versi baru
+    const autoVersion = nextVersion.value
+
     const year = new Date(form.date).getFullYear()
     const fileExt = form.file?.name.split('.').pop() || 'pdf'
-    const generatedFileName = `audit-charter-v${form.version}_${year}.${fileExt}`
+    
+    // Gunakan autoVersion untuk penamaan file
+    const generatedFileName = `audit-charter-v${autoVersion}_${year}.${fileExt}`
 
     const newCharter: AuditCharter = {
       id: Date.now().toString(),
       title: form.title,
-      version: form.version,
+      version: autoVersion, // <--- OTOMATIS DI SINI
       date: form.date,
       uploadedBy: form.uploadedBy,
       approvedBy: form.approvedBy,
       isActive: form.isActive,
       fileName: generatedFileName,
       fileSize: form.file ? `${(form.file.size / 1024 / 1024).toFixed(2)} MB` : '0 MB',
-      fileUrl: '#' 
+      fileUrl: '#'
     }
 
-    // Masukkan ke array (unshift agar di paling atas list jika masuk history)
     charters.value.unshift(newCharter)
   }
 
@@ -126,8 +122,8 @@ export const useCharterStore = defineStore('charter', () => {
     charters,
     activeCharter,
     historyCharters,
+    nextVersion, // <--- Export ini supaya bisa ditampilkan di UI
     addCharter,
-    updateCharter 
+    updateCharter
   }
-  
 })
