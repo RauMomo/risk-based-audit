@@ -1,21 +1,9 @@
 <template>
   <div class="max-w-full mx-auto space-y-8">
-    <div class="flex justify-between items-center">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Audit Charter</h1>
-        <p class="text-gray-500 text-sm mt-1">Governance foundation document management.</p>
-      </div>
-    </div>
 
-    <UCard v-if="store.activeCharter" class="relative group" variant="soft" color="primary">
+    <UCard v-if="store.activeCharter" class="bg-white relative group" variant="soft">
         <div class="flex justify-between items-center">
-          <UBadge
-            label="CURRENTLY ACTIVE"
-            class="px-2.5 py-0.5 rounded inline-block"
-            size="xl"
-            color="success"
-          >
-          </UBadge>
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Active Audit Charter</h1>
           <UButton 
             label="Add Charter"
             @click="showModal = true"
@@ -24,64 +12,135 @@
           > 
           </UButton>
         </div>
-
+        
         <div class="border-t border-gray-400 dark:border-gray-700 my-4"></div>
           
         <div class="flex justify-between items-start">
           <div>
-            
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <UBadge
+              label="CURRENTLY ACTIVE"
+              class="px-2.5 py-0.5 mb-4 rounded inline-block"
+              size="xl"
+              color="success"
+            >
+            </UBadge>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               {{ store.activeCharter.title }}
             </h2>
             <div class="flex items-center gap-4 text-sm text-gray-500 mb-6">
-              <span class="flex items-center gap-1">Tanggal : {{ store.activeCharter.date }}</span>
-              <span class="flex items-center gap-1">Dokumen : {{ store.activeCharter.fileName }}</span>
+              <UBadge
+                class="rounded inline-block"
+                size="lg"
+                color="error"
+              >
+               v{{ store.activeCharter.version }}
+              </UBadge>
+              <UIcon name="calendar" size="md" class="text-primary-400"></UIcon>
+              <span class="flex items-center gap-1">{{ store.activeCharter.date }}</span>
+              <UIcon name="charter" size="md" class="text-primary-400"></UIcon>
+              <span class="flex items-center gap-1">{{ store.activeCharter.fileName }}</span>
             </div>
             
             <UBadge 
               size="xl"
-              class="grid grid-cols-2 bg-white gap-8 mb-6 p-4 rounded-lg">
+              class="grid grid-cols-2 bg-gray-50 gap-8 mb-6 p-4 rounded-lg">
               <div>
-                <p class="text-xs text-gray-400 uppercase tracking-wider">Uploaded By</p>
+                <p class="text-xs text-gray-600 uppercase tracking-wider">Uploaded By</p>
                 <p class="font-medium text-black">{{ store.activeCharter.uploadedBy }}</p>
               </div>
               <div>
-                <p class="text-xs text-gray-400 uppercase tracking-wider">Approved By</p>
+                <p class="text-xs text-gray-600 uppercase tracking-wider">Approved By</p>
                 <p class="font-medium text-black">{{ store.activeCharter.approvedBy }}</p>
               </div>
             </UBadge>
           </div>
-          <div class="flex flex-col items-end">
-            
-            <UButton
-                label="Edit" 
-                @click="handleEdit(store.activeCharter)"
-                class="py-2 mb-12 rounded-lg text-sm font-medium transition"
-                color="primary"
-                icon="edit"
-            >
-            </UButton>
-            <UButton
-              icon="charter"
-              size="xl" 
-              color="primary" 
-              variant="solid" 
-              class="flex items-center bg-gray-100 dark:bg-gray-700 p-8 rounded-lg min-w-[120px]">
-                Download
-            </UButton>
-          </div>
+          
+        </div>
+        <div class="sm:flex sm:flex-row-reverse gap-4">
+          <UButton
+            icon="download"
+            size="md" 
+            color="primary" 
+            variant="solid" 
+          >
+              Download
+          </UButton>  
+          <UButton
+              label="Edit" 
+              @click="handleEdit(store.activeCharter)"
+              color="primary"
+              icon="edit"
+              variant="outline"
+          >
+          </UButton>
         </div> 
     </UCard>
     
     <UCard v-else class="bg-secondary-50 border-l-4 border-secondary-400 p-4">
-      <p class="text-secondary-700">⚠️ Belum ada Audit Charter yang aktif. Silakan upload dokumen baru.</p>
+      <div class="flex justify-between items-center">
+        <UIcon name="warning" size="lg" class="text-warning-600"></UIcon>
+        <p class="text-secondary-700">Belum ada Audit Charter yang aktif. Silakan upload dokumen baru.</p>
+        <UButton 
+          label="Add Charter"
+          @click="showModal = true"
+          color="primary"
+          icon="add"
+        > 
+        </UButton>
+      </div>
     </UCard>
 
-    <div class="border-t border-gray-200 dark:border-gray-700 my-8"></div>
-
     <div>
-      <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">Non-Active Charter</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <UCard class="bg-white relative group" variant="soft">
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">History Audit Charter</h3>
+        <UTable
+          :data="store.historyCharters"    
+          :columns="columns"
+          :empty-state="{ icon: 'i-heroicons-circle-stack-20-solid', label: 'Belum ada data rencana audit.' }"
+          class="w-full text-sm text-left"
+        >
+          <template #version-data="{ row }">
+            <span class="font-bold text-gray-800 dark:text-gray-200">{{ row.original.version }}</span>
+          </template>
+          <template #title-data="{ row }">
+            <span class="font-bold text-gray-800 dark:text-gray-200">{{ row.original.title }}</span>
+          </template>
+          <template #date-data="{ row }">
+            <span class="font-bold text-gray-800 dark:text-gray-200">{{ row.original.date }}</span>
+          </template>
+          <template #approvedBy-data="{ row }">
+            <span class="font-bold text-gray-800 dark:text-gray-200">{{ row.original.approvedBy }}</span>
+          </template>
+          <template #uploadedBy-data="{ row }">
+            <span class="font-bold text-gray-800 dark:text-gray-200">{{ row.original.uploadedBy }}</span>
+          </template>
+          <template #fileName-cell="{ row }">  
+            <UButton 
+              icon="download"
+              color="primary" 
+              size="md"
+            >
+              {{ row.original.fileName }}
+            </UButton>  
+          </template>
+          <template #actions-cell="{ row }">
+            <div class="flex justify-end">
+              <UButton
+                label="Edit"
+                size="md"
+                color="primary"
+                variant="outline"
+                icon="edit"
+                @click="handleEdit(row.original)"
+              />
+            </div>
+          </template>
+
+        </UTable>
+      </UCard>
+
+      <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <UCard
           color="primary"
           v-for="charter in store.historyCharters" 
@@ -107,7 +166,7 @@
           </div>
         </UCard>
       </div>
-      <p v-if="store.historyCharters.length === 0" class="text-gray-400 italic text-sm">No history available.</p>
+      <p v-if="store.historyCharters.length === 0" class="text-gray-400 italic text-sm">No history available.</p> -->
     </div>
 
       <Teleport to="body">
@@ -118,11 +177,14 @@
                     <div class="relative transform overflow-hidden rounded-lg bg-secondary-100 dark:bg-secondary-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                         <UForm @submit.prevent="handleSubmit">
                             <div class="bg-secondary-50 dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4" id="modal-title">
-                                Upload New Charter
-                            </h3>
-                            
-                            <div class="space-y-4">
+                              <div class="flex justify-between items-center">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4" id="modal-title">
+                                    Upload New Charter
+                                </h3>
+                                <UIcon name="close" @click="closeModal" class="text-primary-400 hover:text-primary-600 text-2xl">&times;</UIcon>
+                              </div>
+
+                              <div class="space-y-4">
                                 <UFormField
                                   label="Judul Dokumen"
                                   class="block text-sm font-medium"
@@ -268,12 +330,6 @@
                                 label="Submit"
                               >
                               </UButton>
-                              <UButton 
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
-                                @click="closeModal"
-                                label="Cancel"
-                              >  
-                              </UButton>
                             </div>
                         </UForm>
                     </div>
@@ -285,8 +341,9 @@
 </template>
 
 <script setup lang="ts">
+import type { TableColumn } from '@nuxt/ui'
 import { useCharterStore } from '~/stores/charter'
-import type { CharterFormState } from '~/types/audit'
+import type { AuditCharter, CharterFormState } from '~/types/audit'
 
 // Meta & Stores
 definePageMeta({
@@ -302,6 +359,16 @@ const errorMsg = ref('')
 
 const isEditing = ref(false)
 const editingId = ref<string | null>(null)
+
+const columns: TableColumn<AuditCharter>[] = [
+  { accessorKey: 'version', header: 'Version' },
+  { accessorKey: 'title', header: 'Charter Name' },
+  { accessorKey: 'date', header: 'Date' },
+  { accessorKey: 'approvedBy', header: 'Approved By' },
+  { accessorKey: 'uploadedBy', header: 'Uploaded By' },
+  { accessorKey: 'fileName', header: 'Actions' },
+  { accessorKey: 'actions', header: '' }
+]
 
 // Form State
 const form = reactive<CharterFormState>({
