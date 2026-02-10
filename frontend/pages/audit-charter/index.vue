@@ -1,26 +1,35 @@
 <template>
-  <div class="p-6 max-w-7xl mx-auto space-y-8">
+  <div class="max-w-full mx-auto space-y-8">
     <div class="flex justify-between items-center">
       <div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Audit Charter</h1>
         <p class="text-gray-500 text-sm mt-1">Governance foundation document management.</p>
       </div>
-      <button 
-        @click="showModal = true"
-        class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
-      >
-        <span class="text-xl">+</span> Add Charter
-      </button>
     </div>
 
-    <div v-if="store.activeCharter" class="relative group">
-      <div class="absolute -inset-1 bg-gradient-to-r from-primary-400 to-secondary-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-      <div class="relative dark:bg-secondary-200 rounded-xl p-8 border border-primary-200 dark:border-primary-200 shadow-xl">
+    <UCard v-if="store.activeCharter" class="relative group" variant="soft" color="primary">
+        <div class="flex justify-between items-center">
+          <UBadge
+            label="CURRENTLY ACTIVE"
+            class="px-2.5 py-0.5 rounded inline-block"
+            size="xl"
+            color="success"
+          >
+          </UBadge>
+          <UButton 
+            label="Add Charter"
+            @click="showModal = true"
+            color="primary"
+            icon="add"
+          > 
+          </UButton>
+        </div>
+
+        <div class="border-t border-gray-400 dark:border-gray-700 my-4"></div>
+          
         <div class="flex justify-between items-start">
           <div>
-            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 mb-4 inline-block">
-              CURRENTLY ACTIVE
-            </span>
+            
             <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               {{ store.activeCharter.title }}
             </h2>
@@ -29,46 +38,55 @@
               <span class="flex items-center gap-1">Dokumen : {{ store.activeCharter.fileName }}</span>
             </div>
             
-            <div class="grid grid-cols-2 gap-8 mb-6 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+            <UBadge 
+              size="xl"
+              class="grid grid-cols-2 bg-white gap-8 mb-6 p-4 rounded-lg">
               <div>
                 <p class="text-xs text-gray-400 uppercase tracking-wider">Uploaded By</p>
-                <p class="font-medium">{{ store.activeCharter.uploadedBy }}</p>
+                <p class="font-medium text-black">{{ store.activeCharter.uploadedBy }}</p>
               </div>
               <div>
                 <p class="text-xs text-gray-400 uppercase tracking-wider">Approved By</p>
-                <p class="font-medium">{{ store.activeCharter.approvedBy }}</p>
+                <p class="font-medium text-black">{{ store.activeCharter.approvedBy }}</p>
               </div>
-            </div>
+            </UBadge>
           </div>
-          <div class="relative">
-            <button 
+          <div class="flex flex-col items-end">
+            
+            <UButton
+                label="Edit" 
                 @click="handleEdit(store.activeCharter)"
-                class="w-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200 py-2 mb-12 rounded-lg text-sm font-medium transition"
+                class="py-2 mb-12 rounded-lg text-sm font-medium transition"
+                color="primary"
+                icon="edit"
             >
-              Edit Data
-            </button>
-            <div class="flex items-center bg-gray-100 dark:bg-gray-700 p-8 rounded-lg min-w-[120px]">
-                <UIcon name="charter" class=" text-primary-500" size="32"></UIcon>
-                <a href="#" class="text-primary-600 hover:underline text-sm font-medium m-2">Download</a>
-            </div>
-        </div>
-        </div>
-      </div>
-    </div>
+            </UButton>
+            <UButton
+              icon="charter"
+              size="xl" 
+              color="primary" 
+              variant="solid" 
+              class="flex items-center bg-gray-100 dark:bg-gray-700 p-8 rounded-lg min-w-[120px]">
+                Download
+            </UButton>
+          </div>
+        </div> 
+    </UCard>
     
-    <div v-else class="bg-secondary-50 border-l-4 border-secondary-400 p-4">
+    <UCard v-else class="bg-secondary-50 border-l-4 border-secondary-400 p-4">
       <p class="text-secondary-700">⚠️ Belum ada Audit Charter yang aktif. Silakan upload dokumen baru.</p>
-    </div>
+    </UCard>
 
     <div class="border-t border-gray-200 dark:border-gray-700 my-8"></div>
 
     <div>
       <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">Non-Active Charter</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div 
+        <UCard
+          color="primary"
           v-for="charter in store.historyCharters" 
           :key="charter.id"
-          class="bg-secondary-100 dark:bg-gray-800 p-10 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition opacity-75 hover:opacity-100 cursor-pointer"
+          class="p-4 rounded-lg hover:shadow-md transition opacity-75 hover:opacity-100 cursor-pointer"
         >
           <div class="flex justify-between items-start mb-4">
             <span class="text-xs text-gray-500">{{ charter.date }}</span>
@@ -78,12 +96,16 @@
           <p class="text-xs text-gray-600 mb-4">Approved By : {{ charter.approvedBy }}</p>
           <div class="flex justify-between items-center text-xs border-t pt-4 dark:border-gray-700">
             <span class="text-gray-600">{{ charter.fileName }}</span>
-            <div class="flex gap-3">
-                <button @click="handleEdit(charter)" class="w-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200 p-2 rounded-lg text-sm font-medium transition">Edit</button>
-            </div>
+              <UButton
+                label="Edit"
+                color="primary" 
+                @click="handleEdit(charter)" 
+                class="p-2 rounded-lg text-sm font-medium transition"
+                icon="edit"
+                >
+              </UButton>
           </div>
-          
-        </div>
+        </UCard>
       </div>
       <p v-if="store.historyCharters.length === 0" class="text-gray-400 italic text-sm">No history available.</p>
     </div>
@@ -93,93 +115,167 @@
             <div class="fixed inset-0 bg-gray-100 bg-opacity-75 transition-opacity"></div>
             <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
                 <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                    <div class="relative transform overflow-hidden rounded-lg bg-secondary-100 dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                        <form @submit.prevent="handleSubmit">
+                    <div class="relative transform overflow-hidden rounded-lg bg-secondary-100 dark:bg-secondary-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                        <UForm @submit.prevent="handleSubmit">
                             <div class="bg-secondary-50 dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4" id="modal-title">
                                 Upload New Charter
                             </h3>
                             
                             <div class="space-y-4">
-                                <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Judul Dokumen</label>
-                                <input v-model="form.title" required type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-2 border" placeholder="e.g. Internal Audit Charter 2026">
-                                </div>
+                                <UFormField
+                                  label="Judul Dokumen"
+                                  class="block text-sm font-medium"
+                                  size="lg"
+                                >
+                                  <UInput 
+                                  v-model="form.title" 
+                                  required 
+                                  type="text"
+                                  name="title" 
+                                  id="title"
+                                  class="mt-1 block w-full rounded-md sm:text-sm p-2" 
+                                  placeholder="e.g. Internal Audit Charter 2026"
+                                  />
+                                </UFormField>
 
                                 <div class="grid grid-cols-2 gap-4">
                                 
-                                <div>
-                                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Versi (Auto)</label>
-                                  
+                                <UFormField
+                                  label="Versi (Auto)"
+                                  class="block text-sm font-medium"
+                                  size="lg"
+                                >
                                   <div class="mt-1 block w-full rounded-md border border-gray-200 bg-gray-200 p-2 text-gray-600 sm:text-sm font-bold">
                                     <span v-if="isEditing">{{ form.version }}</span>
                                     <span v-else class="text-primary-600">v{{ store.nextVersion }}</span>
                                   </div>
-                                  
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal</label>
-                                    <input v-model="form.date" required type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-2 border">
-                                </div>
+                                </UFormField>
+
+                                <UFormField
+                                  label="Tanggal"
+                                  class="block text-sm font-medium"
+                                  size="lg"
+                                >
+                                    <UInput
+                                      v-model="form.date" 
+                                      required 
+                                      type="date" 
+                                      class="mt-1 block w-full rounded-md sm:text-sm"
+                                    />
+                                </UFormField>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Diupload Oleh</label>
-                                    <input v-model="form.uploadedBy" required type="text" class="mt-1 block w-full rounded-md border-gray-300 bg-gray-200 sm:text-sm p-2 border" readonly>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Disetujui Oleh</label>
-                                    <input v-model="form.approvedBy" required type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-2 border" placeholder="e.g. Audit Committee">
-                                </div>
+                                <UFormField
+                                  label="Diupload Oleh"
+                                  class="block text-sm font-medium "
+                                  size="lg"
+                                >
+                                  <div class="mt-1 block w-full rounded-md border border-gray-200 bg-gray-200 p-2 text-gray-600 sm:text-sm font-bold">
+                                    <span>{{ form.uploadedBy }}</span>
+                                  </div>
+                                </UFormField>
+
+                                <UFormField
+                                  label="Disetujui Oleh"
+                                  class="block text-sm font-medium"
+                                  size="lg"
+                                >
+                                  <UInput 
+                                    v-model="form.approvedBy" 
+                                    required 
+                                    type="text" 
+                                    class="mt-1 block w-full rounded-md sm:text-sm"
+                                    placeholder="e.g. Audit Committee"
+                                  />
+                                </UFormField>
                                 </div>
 
-                                <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
-                                <div class="flex items-center gap-4">
-                                    <label class="inline-flex items-center">
-                                    <input type="radio" v-model="form.isActive" :value="true" class="form-radio text-primary-600">
-                                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Active</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                    <input type="radio" v-model="form.isActive" :value="false" class="form-radio text-gray-600">
-                                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Inactive (Archive)</span>
-                                    </label>
-                                </div>
-                                </div>
+                                <UFormField
+                                  label="Status"
+                                  class="block text-sm font-medium"
+                                  size="lg"
+                                >
+                                  
+                                  <div class="flex items-center gap-4">
+                                      <label class="inline-flex items-center">
+                                      <input type="radio" v-model="form.isActive" :value="true" class="form-radio text-primary-600">
+                                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Active</span>
+                                      </label>
+                                      <label class="inline-flex items-center">
+                                      <input type="radio" v-model="form.isActive" :value="false" class="form-radio text-primary-600">
+                                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Inactive</span>
+                                      </label>
+                                  </div>
+                                </UFormField>
 
-                                <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">File Charter (PDF/DOCX)</label>
-                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:bg-gray-50 transition">
-                                    <div class="space-y-1 text-center">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <div class="flex text-sm text-gray-600">
-                                        <label for="file-upload" class="relative cursor-pointer rounded-md font-medium text-primary-600 hover:text-primary-500 focus-within:outline-none">
-                                        <span>Upload a file</span>
-                                        <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="handleFileChange" accept=".pdf,.docx,.doc">
-                                        </label>
-                                        <p class="pl-1">or drag and drop</p>
-                                    </div>
-                                    <p class="text-xs text-gray-500">PDF, DOCX up to 5MB</p>
-                                    <p v-if="form.file" class="text-sm text-green-600 font-bold mt-2">Selected: {{ form.file.name }}</p>
-                                    </div>
-                                </div>
-                                <p v-if="errorMsg" class="text-red-500 text-xs mt-1">{{ errorMsg }}</p>
-                                </div>
+                                <UFormField 
+                                  label="Upload File Charter (PDF/DOCX)" 
+                                  :error="errorMsg" 
+                                  class="block text-sm font-medium"
+                                  size="lg"
+                                >
+                                  <UInput 
+                                    type="file" 
+                                    icon="i-heroicons-paper-clip"
+                                    @change="handleFileChange"
+                                    accept=".pdf,.docx,.doc"
+                                    class="w-full"
+                                  />
+                                  
+                                  <div v-if="form.file" class="mt-2 flex items-center gap-2 text-sm text-primary-600 bg-primary-50 p-2 rounded">
+                                    <UIcon name="i-heroicons-document" />
+                                    <span class="font-bold">{{ form.file.name }}</span>
+                                  </div>
+                                </UFormField>
+
+                                <!-- <UFileUpload
+                                  label="Upload file (PDF/DOCX)"
+                                  :error="errorMsg"
+                                  description="PDF or DOCX (max. 2MB)"
+                                  layout="list"
+                                  multiple
+                                  :interactive="false"
+                                  class="w-full"
+                                >
+                                  <template #actions="{ open }">
+                                    <UButton
+                                      label="Select images"
+                                      icon="i-lucide-upload"
+                                      color="neutral"
+                                      variant="outline"
+                                      @click="open()"
+                                    />
+                                  </template>
+
+                                  <template #files-bottom="{ removeFile, files }">
+                                    <UButton
+                                      v-if="files?.length"
+                                      label="Remove all files"
+                                      color="neutral"
+                                      @click="removeFile()"
+                                    />
+                                  </template>
+                                </UFileUpload> -->
+                              </div>
                             </div>
-                            </div>
-                            
                             <div class="bg-secondary-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-                                Upload Charter
-                            </button>
-                            <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" @click="closeModal">
-                                Cancel
-                            </button>
+                              <UButton 
+                                type="submit"
+                                color="primary" 
+                                class="w-full inline-flex justify-center rounded-md px-4 py-2 sm:ml-3 sm:w-auto sm:text-sm"
+                                label="Submit"
+                              >
+                              </UButton>
+                              <UButton 
+                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                                @click="closeModal"
+                                label="Cancel"
+                              >  
+                              </UButton>
                             </div>
-                        </form>
+                        </UForm>
                     </div>
                 </div>
             </div>
@@ -206,8 +302,6 @@ const errorMsg = ref('')
 
 const isEditing = ref(false)
 const editingId = ref<string | null>(null)
-
-const isAddRiskProfileFormOpen = ref(false);
 
 // Form State
 const form = reactive<CharterFormState>({

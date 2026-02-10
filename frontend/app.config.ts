@@ -10,6 +10,8 @@ export default defineAppConfig({
       check: "heroicons:check",
       loading: "heroicons:arrow-path",
       charter: "heroicons:clipboard-document-list",
+      warning:"heroicons:exclamation-triangle",
+      alert: "heroicons:alert-circle",
       // navigation
       chevronDown: "heroicons:chevron-down",
       chevronUp: "heroicons:chevron-up",
