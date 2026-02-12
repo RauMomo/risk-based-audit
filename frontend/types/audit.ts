@@ -1,19 +1,25 @@
 // Audit Types
 
 export enum AuditType {
-  ASSURANCE = 'assurance',
-  SPECIAL = 'special',
-  SPECIFIC_REASON = 'specific_reason',
-  INVESTIGATION = 'investigation'
+  ASSURANCE = 'Assurance',
+  SPECIAL_AUDIT = 'Special Audit',
+  SPECIFIC_REASON = 'Specific Reason',
+  CONSULTING_SERVICES = 'Consulting Services',
+  INVESTIGATION = 'Investigation',
+  QUALITY_ASSURANCE_REVIEW = 'Quality Assurance Review',
+  FOLLOWUP_AUDIT = 'Follow-Up Audit',
+  OPERASIONAL = "Operasional",
+  FINANCIAL = "Financial",
+  IT = "IT"
 }
 
 export enum AuditStatus {
-  PLANNED = 'planned',
-  IN_PROGRESS = 'in_progress',
-  FIELDWORK = 'fieldwork',
-  REPORTING = 'reporting',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled'
+  PLANNED = 'Planned',
+  IN_PROGRESS = 'In Progress',
+  FIELDWORK = 'Fieldwork',
+  REPORTING = 'Reporting',
+  COMPLETED = 'Completed',
+  CANCELLED = 'Cancelled'
 }
 
 export interface AuditPlan {
@@ -75,17 +81,17 @@ export interface AuditFinding {
 }
 
 export enum FindingSeverity {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  CRITICAL = 'critical'
+  LOW = 'Low',
+  MEDIUM = 'Medium',
+  HIGH = 'High',
+  CRITICAL = 'Critical'
 }
 
 export enum FindingStatus {
-  OPEN = 'open',
-  IN_PROGRESS = 'in_progress',
-  RESOLVED = 'resolved',
-  CLOSED = 'closed'
+  OPEN = 'Open',
+  IN_PROGRESS = 'In Progress',
+  RESOLVED = 'Resolved',
+  CLOSED = 'Closed'
 }
 
 export interface AuditCharter {
@@ -109,4 +115,46 @@ export interface CharterFormState {
   approvedBy: string;
   isActive: boolean;
   file: File | null;
+}
+
+export interface AnnualAuditPlan {
+  id?: string;
+  code: string;        // Kode Kegiatan (e.g., ASR-01)
+  name: string;        // Nama Kegiatan
+  type: AuditType;    // Kategori (Bisa custom, jadi string)
+  selectedMonths: number[];  // 0=Jan, 11=Dec
+  quarters?: string[];        // Calculated: ['Q1', 'Q2']
+  auditorCount: number;      // Jumlah Auditor (1-10)
+  daysPerAuditor: number;    // Durasi per auditor
+  totalMandays?: number;      // Calculated: count * days
+  supervisorId: string;      // ID Supervisor
+  supervisorName?: string;    // Nama Supervisor
+  year: string;
+  notes?: string;
+  status: AuditStatus;
+  isActive: boolean;   // Status Aktif/Non-aktif
+  isUsed?: boolean;    // Flag untuk cek apakah sudah dipakai di RKAT (Simulasi)
+  //auditUniverse: string;  Unit/Area yang diaudit
+  //auditCycle: string;     e.g., "Annually", "2 Years"
+  //lastAudit: string;      Tahun terakhir audit
+  
+}
+
+export interface AnnualPlanForm {
+  id?: string
+  code: string;
+  name: string;
+  type: AuditType;
+  selectedMonths: number[];
+  status: AuditStatus;
+  auditorCount: number;
+  daysPerAuditor: number;
+  supervisorId: string;
+  notes?: string;
+  year: string;
+  isActive: boolean;
+  // auditUniverse: string;
+  // auditCycle: string;
+  // lastAudit: string;
+  
 }

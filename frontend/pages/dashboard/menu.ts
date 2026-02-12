@@ -12,6 +12,12 @@ export const MenuList = [
     description: "Manage audit mandate and charter",
   },
   {
+    name: "Annual Audit Plan",
+    href: "/annual-audit",
+    icon: "charter",
+    description: "Manage annual audit plan",
+  },
+  {
     name: "Risk Profile",
     href: "/risk-profile",
     icon: "charter",

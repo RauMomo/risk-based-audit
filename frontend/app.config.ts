@@ -1,3 +1,5 @@
+import { calendar } from "#build/ui";
+
 export default defineAppConfig({
   /**
    * Icon system (Nuxt UI + Iconify)
@@ -10,6 +12,10 @@ export default defineAppConfig({
       check: "heroicons:check",
       loading: "heroicons:arrow-path",
       charter: "heroicons:clipboard-document-list",
+      warning:"heroicons:exclamation-triangle",
+      alert: "heroicons:alert-circle",
+      calendar:"heroicons:calendar",
+      download:"heroicons:arrow-down-tray",
       // navigation
       chevronDown: "heroicons:chevron-down",
       chevronUp: "heroicons:chevron-up",
