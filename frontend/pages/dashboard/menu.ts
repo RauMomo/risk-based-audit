@@ -23,4 +23,16 @@ export const MenuList = [
     icon: "charter",
     description: "Strategic and annual audit plans",
   },
+  {
+    name: "Strategic Plan Internal Audit",
+    href: "/strategic-audit-plan",
+    icon: "plan",
+    description: "Strategic planning audit",
+  },
+  {
+    name: "Surat Tugas Audit",
+    href: "/strategic-audit-plan",
+    icon: "plan",
+    description: "Strategic planning audit",
+  },
 ];

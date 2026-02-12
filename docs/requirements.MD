@@ -44,7 +44,25 @@ Build Tool: Vite
 Chart: Chart.js
 UI Components: Headless UI
 
+For the Backend we will be using Golang, with several libraries for tool analytics and AI, combination with gRPC, Kafka and RabbitMQ for logging and error reporting. Mail service are also required. Prepare the best layering for project structure.
+
+Try to prepare orchestration through Docker and Makefile automatic deployment with Github Actions/Jenkins or anything that you think is powerful, light and reliable in this modern era
+
 You can improvise by selecting the more proper library that you think will enhance performance and effectivity of the overall product
+
+## Architecture Overview
+Try to use service, repo, dependency injection, utils, routes, middlewares, validations, controllers and try to create registry for each layers, prepare minimum boilerplate configuration so i can follow it well
+
+try to create User Model consists of
+-Username
+-Roles
+-Permissions
+-Features
+-2FA Codes
+-Activity Logs
+
+## Security Implementations
+JWT Auth, Role Based Access Control, Password Hashing, CSRF Protection, Two Factor Authentication
 
 ## Project Architecture
 

@@ -18,6 +18,9 @@ export default defineAppConfig({
       add: "heroicons:plus",
       edit: "heroicons:pencil",
       delete: "heroicons:trash",
+      import: "heroicons:document-arrow-up",
+      plan: "lucide:target",
+      info: "heroicons:information-circle",
     },
   },
   theme: {

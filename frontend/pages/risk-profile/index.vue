@@ -3,7 +3,17 @@
     <template #header>
       <div class="flex flex-row items-stretch justify-between gap-8">
         <div class="flex flex-col gap-2">
-          <h1 class="text-3xl font-bold text-gray-900">Risk Profile</h1>
+          <div class="flex flex-row items-center">
+            <h1 class="text-3xl font-bold text-gray-900">Risk Profile</h1>
+            <UButton
+              icon="info"
+              size="md"
+              color="primary"
+              variant="ghost"
+              class="hover:cursor-pointer"
+              @click="isInformationRiskProfileModalOpen = true"
+            />
+          </div>
           <h6>
             Daftar risiko prioritas perusahaan dengan tingkat dampak dan
             kemungkinan
@@ -11,6 +21,7 @@
         </div>
         <div class="self-start">
           <UButton
+            icon="add"
             label="Tambah Risiko"
             variant="solid"
             color="primary"
@@ -23,21 +34,48 @@
     </template>
     <div class="relative flex flex-col gap-4">
       <h5>Matriks Resiko</h5>
-      <UTable :data="data" :columns="columns"> </UTable>
+      <UTable
+        :data="data"
+        :columns="columns"
+        :pagination-options="{
+          getPaginationRowModel: getPaginationRowModel(),
+        }"
+      >
+      </UTable>
     </div>
     <template #footer>
       <div class="relative flex flex-col gap-4">
-        <h5>List Resiko</h5>
+        <div class="flex flex-row items-stretch justify-between gap-8">
+          <h5>List Resiko</h5>
+          <UButton
+            label="Import"
+            variant="solid"
+            color="primary"
+            size="sm"
+            icon="import"
+            @click="isAddRiskProfileFormOpen = true"
+          >
+          </UButton>
+        </div>
         <UTable :data="riskData" :columns="priorityRiskListColumn"> </UTable>
       </div>
     </template>
   </UCard>
-  <AddRiskProfileForm v-model:isOpen="isAddRiskProfileFormOpen" />
+  <AddRiskProfileForm
+    v-model:isOpen="isAddRiskProfileFormOpen"
+    v-model:editMode="onEditMode"
+    v-model:riskData="selectedRiskValueRaw"
+  />
   <DeleteConfirmationRiskItem
     v-model:isOpen="isDeleteRiskProfileModalOpen"
     v-model:riskName="selectedRiskName"
     v-model:riskId="selectedRiskId"
   />
+  <DetailRiskProfileForm
+    v-model:isOpen="isDetailRiskProfileModalOpen"
+    v-model:riskData="selectedRiskValueRaw"
+  />
+  <InformationRiskProfile v-model:isOpen="isInformationRiskProfileModalOpen" />
 </template>
 
 <script setup lang="ts">
@@ -45,6 +83,10 @@ import type { TableColumn } from "@nuxt/ui";
 import AddRiskProfileForm from "~/components/risk-profile/AddRiskProfileForm.vue";
 import DeleteConfirmationRiskItem from "~/components/risk-profile/DeleteConfirmationRiskItem.vue";
 import { useRiskProfileStore, type RiskListItem } from "~/stores/profile-risk";
+import DetailRiskProfileForm from "~/components/risk-profile/DetailRiskProfileForm.vue";
+import { riskColor, riskColorStyling } from "~/types/common";
+import { getPaginationRowModel } from "@tanstack/vue-table";
+import InformationRiskProfile from "~/components/risk-profile/InformationRiskProfile.vue";
 
 const props = defineProps<{
   risks: [];
@@ -61,6 +103,10 @@ const riskProfileStore = useRiskProfileStore();
 
 const isAddRiskProfileFormOpen = ref(false);
 const isDeleteRiskProfileModalOpen = ref(false);
+const isDetailRiskProfileModalOpen = ref(false);
+const isInformationRiskProfileModalOpen = ref(false);
+
+const onEditMode = ref(false);
 
 // Use store data instead of local refs
 const data = computed(() => riskProfileStore.getRiskMatrix);
@@ -68,22 +114,35 @@ const riskData = computed(() => riskProfileStore.getRiskList);
 
 const selectedRiskName = ref("");
 const selectedRiskId = ref("");
+const selectedRiskValue = ref({} as RiskListItem);
 
-// Fetch risk profiles on mount
-onMounted(async () => {
-  await riskProfileStore.fetchRiskProfiles();
+const selectedRiskValueRaw = computed(() => {
+  return toRaw(selectedRiskValue.value);
 });
 
-const color = {
-  Low: "successLight" as const,
-  "Low to Moderate": "successDark" as const,
-  Moderate: "warningLight" as const,
-  "Moderate to High": "warningDark" as const,
-  High: "error" as const,
-};
+const pagination = ref({
+  pageIndex: 0,
+  pageSize: 1,
+});
+
+watch(riskData, () => {
+  pagination.value = {
+    pageIndex: 0,
+    pageSize: Math.floor(riskData.value.length / 10) + 1,
+  };
+});
+
+// // Fetch risk profiles on mount
+// onMounted(async () => {
+//   await riskProfileStore.fetchRiskProfiles();
+// });
+
+watch(riskData, () => {
+  console.log(riskData.value.length);
+});
 
 const getRiskCellValue = (risk: any) => {
-  var selectedColor = Object.entries(color).find(([key, value]) => {
+  var selectedColor = Object.entries(riskColor).find(([key, value]) => {
     var clearedKey = risk.getValue().replace(/\s+\d+$/, "");
     return clearedKey === key;
   })?.[1];
@@ -99,7 +158,6 @@ const deleteRisk = (id: string) => {
   selectedRiskId.value = id;
   isDeleteRiskProfileModalOpen.value = true;
 };
-
 const columns: TableColumn<Object>[] = [
   {
     accessorKey: "name",
@@ -121,7 +179,7 @@ const columns: TableColumn<Object>[] = [
     meta: {
       class: {
         th: "text-center font-semibold bg-primary text-secondary-900",
-        td: "text-center font-semibold [&:nth-child(2):has(td:nth-child(2))]:bg-primary ",
+        td: "text-center font-semibold [&:nth-child(2):has(td:nth-child(2))]:bg-primary",
       },
     },
   },
@@ -176,7 +234,8 @@ const priorityRiskListColumn: TableColumn<RiskListItem>[] = [
     },
     meta: {
       class: {
-        th: "bg-primary text-secondary-900 px-6 py-3 text-left text-xs leading-4 font-medium bg-gray-50 text-gray-500 uppercase tracking-wider",
+        th: "bg-primary text-secondary-900 text-center place-self-center px-6 py-3 text-xs leading-4 font-medium uppercase tracking-wider",
+        td: "text-center place-self-center text-black",
       },
     },
   },
@@ -188,7 +247,8 @@ const priorityRiskListColumn: TableColumn<RiskListItem>[] = [
     },
     meta: {
       class: {
-        th: "bg-primary text-secondary-900 px-6 py-3 text-left text-xs leading-4 font-medium bg-gray-50 text-gray-500 uppercase tracking-wider",
+        th: "bg-primary text-secondary-900 text-center place-self-center px-6 py-3 text-xs leading-4 font-medium uppercase tracking-wider",
+        td: "text-center place-self-center text-black",
       },
     },
   },
@@ -200,43 +260,45 @@ const priorityRiskListColumn: TableColumn<RiskListItem>[] = [
     },
     meta: {
       class: {
-        th: "bg-primary text-secondary-900 px-6 py-3 text-left text-xs leading-4 font-medium bg-gray-50 text-gray-500 uppercase tracking-wider",
+        th: "bg-primary text-secondary-900 text-center place-self-center px-6 py-3 text-xs leading-4 font-medium uppercase tracking-wider",
+        td: "text-center place-self-center text-black",
       },
     },
   },
   {
-    accessorKey: "impact_level",
+    accessorKey: "latest_impact_level",
     header: "Impact Level",
     cell: (risk: any) => {
       return risk.getValue();
     },
     meta: {
       class: {
-        th: "bg-primary text-secondary-900 px-6 py-3 text-left text-xs leading-4 font-medium bg-gray-50 text-gray-500 uppercase tracking-wider",
+        th: "bg-primary text-secondary-900 text-center place-self-center px-6 py-3 text-xs leading-4 font-medium uppercase tracking-wider",
+        td: "text-center place-self-center text-black",
       },
     },
   },
   {
-    accessorKey: "possibility_level",
+    accessorKey: "latest_possibility_level",
     header: "Possibility Level",
     cell: (risk: any) => {
       return risk.getValue();
     },
     meta: {
       class: {
-        th: "bg-primary text-secondary-900 px-6 py-3 text-left text-xs leading-4 font-medium bg-gray-50 text-gray-500 uppercase tracking-wider",
+        th: "bg-primary text-secondary-900 text-center place-self-center px-6 py-3 text-xs leading-4 font-medium uppercase tracking-wider",
+        td: "text-center place-self-center text-black",
       },
     },
   },
   {
     accessorKey: "risk_level",
     header: "Risk Level",
-    cell: (risk: any) => {
-      return risk.getValue();
-    },
+    cell: getRiskCellValue,
     meta: {
       class: {
-        th: "bg-primary text-secondary-900 px-6 py-3 text-left text-xs leading-4 font-medium bg-gray-50 text-gray-500 uppercase tracking-wider",
+        th: "bg-primary text-secondary-900 text-center place-self-center px-6 py-3 text-xs leading-4 font-medium uppercase tracking-wider",
+        td: "place-self-center text-center",
       },
     },
   },
@@ -264,8 +326,8 @@ const priorityRiskListColumn: TableColumn<RiskListItem>[] = [
     },
     meta: {
       class: {
-        th: "bg-primary text-secondary-900 px-6 py-3 text-center mx-auto text-xs leading-4 font-medium bg-gray-50 text-gray-500 uppercase tracking-wider",
-        td: "px-8",
+        th: "bg-primary text-secondary-900 text-center place-self-center px-6 py-3 mx-auto text-xs leading-4 font-medium uppercase tracking-wider",
+        td: "text-center place-self-center",
       },
     },
   },
@@ -294,6 +356,19 @@ function getRowItems(row: any) {
     },
     {
       label: "Details",
+      onSelect() {
+        selectedRiskValue.value = row.original;
+        isDetailRiskProfileModalOpen.value = true;
+        onEditMode.value = false;
+      },
+    },
+    {
+      label: "Edit",
+      onSelect() {
+        selectedRiskValue.value = row.original;
+        isAddRiskProfileFormOpen.value = true;
+        onEditMode.value = true;
+      },
     },
     {
       label: "Delete",

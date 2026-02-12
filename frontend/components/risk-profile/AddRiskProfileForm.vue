@@ -1,6 +1,6 @@
 <template>
   <UModal
-    title="Add Risk Priority List"
+    :title="formTitle"
     :open="props.isOpen"
     :close="{
       color: 'primary',
@@ -128,19 +128,47 @@
 
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
-import { ref, computed } from "vue";
-import { int } from "zod/v4";
+import { ref, computed, watch } from "vue";
 import { useRiskProfileStore } from "~/stores/profile-risk";
 
 const props = defineProps<{
   isOpen: boolean;
+  editMode: boolean;
+  riskData?: RiskListItem;
 }>();
+
+watch(props, () => {
+  if (props.editMode) {
+    riskProfile.value = {
+      impact_level: props.riskData!.latest_impact_level,
+      possibility_level: props.riskData!.latest_possibility_level,
+      risk_name: props.riskData!.risk_name,
+      risk_category: props.riskData!.risk_category,
+    };
+
+    if (props.riskData!.list_residual_risks.length > 1) {
+      quarterlyActive.value = true;
+      quarterlyRiskProfiles.value = props.riskData!.list_residual_risks.map(
+        (risk) => {
+          return {
+            impact_level: risk.impact_level,
+            possibility_level: risk.possibility_level,
+          };
+        },
+      );
+    }
+  }
+});
 
 const emit = defineEmits<{
   "update:isOpen": [value: boolean];
 }>();
 
 const riskProfileStore = useRiskProfileStore();
+
+const formTitle = computed(() => {
+  return props.editMode ? "Edit Risk Priority List" : "Add Risk Priority List";
+});
 
 onMounted(() => {
   console.log("AddRiskProfileForm mounted");
@@ -239,32 +267,51 @@ const quarterlyRiskProfiles = ref<RiskProfile[]>([
   },
 ]);
 
-const currentImpactLevel = computed({
-  get: () =>
-    quarterlyActive.value
-      ? quarterlyRiskProfiles.value![tabActiveIndex.value]!.impact_level
-      : riskProfile.value.impact_level,
-  set: (value: number) => {
-    if (quarterlyActive.value) {
-      quarterlyRiskProfiles.value![tabActiveIndex.value]!.impact_level = value;
-    } else {
-      riskProfile.value.impact_level = value;
-    }
-  },
+const quarterlyActive = ref(false);
+const tabActiveIndex = ref(0);
+
+const currentImpactLevel = ref<number>(
+  quarterlyActive.value
+    ? quarterlyRiskProfiles.value![tabActiveIndex.value]!.impact_level
+    : riskProfile.value.impact_level,
+);
+
+const currentPossibilityLevel = ref<number>(
+  quarterlyActive.value
+    ? quarterlyRiskProfiles.value![tabActiveIndex.value]!.possibility_level
+    : riskProfile.value.possibility_level,
+);
+
+// // Sync values when switching between quarterly/non-quarterly or changing tabs
+// watch([quarterlyActive, tabActiveIndex], () => {
+//   if (quarterlyActive.value) {
+//     currentImpactLevel.value =
+//       quarterlyRiskProfiles.value![tabActiveIndex.value]!.impact_level;
+//     currentPossibilityLevel.value =
+//       quarterlyRiskProfiles.value![tabActiveIndex.value]!.possibility_level;
+//   } else {
+//     currentImpactLevel.value = riskProfile.value.impact_level;
+//     currentPossibilityLevel.value = riskProfile.value.possibility_level;
+//   }
+// });
+
+// Sync impact level changes back to source
+watch(currentImpactLevel, (newValue) => {
+  if (quarterlyActive.value) {
+    quarterlyRiskProfiles.value![tabActiveIndex.value]!.impact_level = newValue;
+  } else {
+    riskProfile.value.impact_level = newValue;
+  }
 });
 
-const currentPossibilityLevel = computed({
-  get: () =>
-    quarterlyActive.value
-      ? quarterlyRiskProfiles.value![tabActiveIndex.value]!.possibility_level
-      : riskProfile.value.possibility_level,
-  set: (value: number) => {
-    if (quarterlyActive.value) {
-      quarterlyRiskProfiles.value![tabActiveIndex.value]!.possibility_level = value;
-    } else {
-      riskProfile.value.possibility_level = value;
-    }
-  },
+// Sync possibility level changes back to source
+watch(currentPossibilityLevel, (newValue) => {
+  if (quarterlyActive.value) {
+    quarterlyRiskProfiles.value![tabActiveIndex.value]!.possibility_level =
+      newValue;
+  } else {
+    riskProfile.value.possibility_level = newValue;
+  }
 });
 
 const closeModal = () => {
@@ -278,13 +325,11 @@ const closeModal = () => {
   };
 };
 
-const quarterlyActive = ref(false);
-const tabActiveIndex = ref(0);
-
 const tabActive = computed({
-  get: () => tabActiveIndex.value,
+  get: () => tabActiveIndex.value.toString(),
   set: (value: string | number) => {
-    tabActiveIndex.value = typeof value === 'string' ? parseInt(value, 10) : value;
+    tabActiveIndex.value =
+      typeof value === "string" ? parseInt(value, 10) : value;
   },
 });
 
